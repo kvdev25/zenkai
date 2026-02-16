@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
@@ -34,7 +37,6 @@ func ParseNestedToml(path string) (map[string]string, error) {
 
 	values := make(map[string]string)
 	flattenMap("", raw, values)
-
 	return values, nil
 }
 
@@ -76,6 +78,30 @@ func ApplyThemeParallel(templateDir string, values map[string]string) error {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// APPLY BY NAME (NEW — DOES NOT MODIFY ENGINE)
+////////////////////////////////////////////////////////////////////////////////
+
+func ApplyThemeByName(configBase, themesDir, templatesDir, themeName string) error {
+	themePath := filepath.Join(themesDir, themeName, "config.toml")
+
+	values, err := ParseNestedToml(themePath)
+	if err != nil {
+		return err
+	}
+
+	err = ApplyThemeParallel(templatesDir, values)
+
+	// Always try to cache theme if parsing worked
+	cacheErr := CacheCurrentTheme(configBase, themeName)
+
+	if err != nil {
+		return err
+	}
+
+	return cacheErr
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // TEMPLATE PROCESSING
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -100,11 +126,9 @@ func processTemplate(templatePath string, values map[string]string) error {
 
 	if strings.Contains(firstLine, "::") {
 		parts := strings.SplitN(firstLine, "::", 2)
-
 		if strings.TrimSpace(parts[0]) != "" {
 			paths = strings.Fields(strings.TrimSpace(parts[0]))
 		}
-
 		command = strings.TrimSpace(parts[1])
 	} else if firstLine != "" {
 		paths = strings.Fields(firstLine)
@@ -117,7 +141,6 @@ func processTemplate(templatePath string, values map[string]string) error {
 
 	rendered := renderTemplate(string(rest), values)
 
-	// Copy if paths exist
 	for _, p := range paths {
 		dest := expandHome(p)
 
@@ -132,7 +155,6 @@ func processTemplate(templatePath string, values map[string]string) error {
 		fmt.Println("Written:", dest)
 	}
 
-	// Run command if present
 	if command != "" {
 		cmd := exec.Command("sh", "-c", command)
 		cmd.Stdout = os.Stdout
@@ -150,7 +172,6 @@ func processTemplate(templatePath string, values map[string]string) error {
 func renderTemplate(content string, values map[string]string) string {
 	return templateRegex.ReplaceAllStringFunc(content, func(match string) string {
 		parts := templateRegex.FindStringSubmatch(match)
-
 		key := parts[1]
 		modifierChain := parts[2]
 
@@ -190,7 +211,7 @@ func parseModifiers(chain string) []modifier {
 			name := raw[:strings.Index(raw, "(")]
 			argStr := raw[strings.Index(raw, "(")+1 : len(raw)-1]
 
-			args := []string{}
+			var args []string
 			if argStr != "" {
 				args = strings.Split(argStr, ",")
 			}
@@ -231,8 +252,6 @@ func applyModifier(value, name string, args []string) string {
 			return strings.Repeat(value, n)
 		}
 
-	// ---- HSL COLOR MATH ----
-
 	case "lighten":
 		if len(args) == 1 {
 			p, _ := strconv.ParseFloat(args[0], 64)
@@ -267,8 +286,6 @@ func applyModifier(value, name string, args []string) string {
 		h, s, l := hexToHSL(value)
 		return fmt.Sprintf("%.0f,%.0f%%,%.0f%%", h, s*100, l*100)
 
-	// ---- RGB ----
-
 	case "rgb":
 		r, g, b := hexToRGB(value)
 		return fmt.Sprintf("%d,%d,%d", r, g, b)
@@ -295,7 +312,6 @@ func applyModifier(value, name string, args []string) string {
 
 func hexToRGB(hex string) (int, int, int) {
 	hex = strings.TrimPrefix(hex, "#")
-
 	if len(hex) != 6 {
 		return 0, 0, 0
 	}
@@ -365,7 +381,6 @@ func hslToHex(h, s, l float64) string {
 		b = l
 	} else {
 		var q float64
-
 		if l < 0.5 {
 			q = l * (1 + s)
 		} else {
@@ -440,9 +455,11 @@ func applySystemMode(values map[string]string) error {
 
 	switch strings.ToLower(mode) {
 	case "dark":
-		cmd = `gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"; gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"`
+		cmd = `gsettings set org.gnome.desktop.interface color-scheme "prefer-dark";
+		       gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"`
 	case "light":
-		cmd = `gsettings set org.gnome.desktop.interface color-scheme "prefer-light"; gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"`
+		cmd = `gsettings set org.gnome.desktop.interface color-scheme "prefer-light";
+		       gsettings set org.gnome.desktop.interface gtk-theme "Adwaita"`
 	}
 
 	if cmd == "" {
@@ -454,7 +471,6 @@ func applySystemMode(values map[string]string) error {
 	command.Stderr = os.Stderr
 
 	fmt.Println("Applying system mode:", mode)
-
 	return command.Run()
 }
 
@@ -491,7 +507,6 @@ func atomicWrite(path string, data []byte) error {
 func flattenMap(prefix string, input map[string]any, output map[string]string) {
 	for key, value := range input {
 		fullKey := key
-
 		if prefix != "" {
 			fullKey = prefix + "." + key
 		}
@@ -515,4 +530,95 @@ func expandHome(path string) string {
 		return filepath.Join(home, path[2:])
 	}
 	return path
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// THEME STATE (NEW FEATURE ONLY)
+////////////////////////////////////////////////////////////////////////////////
+
+const stateFileName = ".theme_state"
+
+func CacheCurrentTheme(configBase, themeName string) error {
+	statePath := filepath.Join(configBase, stateFileName)
+	return os.WriteFile(statePath, []byte(themeName), 0644)
+}
+
+func GetCachedTheme(configBase string) (string, error) {
+	statePath := filepath.Join(configBase, stateFileName)
+	data, err := os.ReadFile(statePath)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(data)), nil
+}
+
+func ListThemes(themesDir string) ([]string, error) {
+	entries, err := os.ReadDir(themesDir)
+	if err != nil {
+		return nil, err
+	}
+
+	var themes []string
+	for _, e := range entries {
+		if e.IsDir() {
+			themes = append(themes, e.Name())
+		}
+	}
+
+	sort.Strings(themes) // ✅ CRITICAL FIX
+
+	return themes, nil
+}
+
+func GetNextTheme(configBase, themesDir string) (string, error) {
+	themes, err := ListThemes(themesDir)
+	if err != nil {
+		return "", err
+	}
+	if len(themes) == 0 {
+		return "", fmt.Errorf("no themes found")
+	}
+
+	current, _ := GetCachedTheme(configBase)
+
+	for i, t := range themes {
+		if t == current {
+			return themes[(i+1)%len(themes)], nil
+		}
+	}
+
+	return themes[0], nil
+}
+
+func GetPrevTheme(configBase, themesDir string) (string, error) {
+	themes, err := ListThemes(themesDir)
+	if err != nil {
+		return "", err
+	}
+	if len(themes) == 0 {
+		return "", fmt.Errorf("no themes found")
+	}
+
+	current, _ := GetCachedTheme(configBase)
+
+	for i, t := range themes {
+		if t == current {
+			return themes[(i-1+len(themes))%len(themes)], nil
+		}
+	}
+
+	return themes[0], nil
+}
+
+func GetRandomTheme(themesDir string) (string, error) {
+	themes, err := ListThemes(themesDir)
+	if err != nil {
+		return "", err
+	}
+	if len(themes) == 0 {
+		return "", fmt.Errorf("no themes found")
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	return themes[rand.Intn(len(themes))], nil
 }
