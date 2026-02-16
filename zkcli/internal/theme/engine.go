@@ -570,6 +570,30 @@ func ListThemes(themesDir string) ([]string, error) {
 	return themes, nil
 }
 
+func Choose(configBase, themesDir string) (string, error) {
+	cmdStr := fmt.Sprintf(
+		"zkcli theme list | fzf --preview-window=top --preview='fzf-preview %s/{1}/preview.png' | xargs -xo zkcli theme apply",
+		themesDir,
+	)
+
+	cmd := exec.Command("xdg-terminal-exec", "bash", "-c", cmdStr)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+
+	if err := cmd.Run(); err != nil {
+		return "", fmt.Errorf("failed to run theme choose pipeline: %w", err)
+	}
+
+	// Optional: read the applied theme from cache
+	currentTheme, err := GetCachedTheme(configBase)
+	if err != nil {
+		return "", fmt.Errorf("failed to get cached theme: %w", err)
+	}
+
+	return currentTheme, nil
+}
+
 func GetNextTheme(configBase, themesDir string) (string, error) {
 	themes, err := ListThemes(themesDir)
 	if err != nil {

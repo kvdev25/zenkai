@@ -8,11 +8,38 @@ import (
 	"github.com/spf13/cobra"
 
 	"cli/zkcli/internal/theme"
+	"cli/zkcli/internal/wallpaper"
 )
 
 var themeCmd = &cobra.Command{
 	Use:   "theme",
 	Short: "Manage themes",
+}
+
+var chooseCmd = &cobra.Command{
+	Use:   "choose",
+	Short: "Choose and Apply a theme",
+	RunE: func(cmd *cobra.Command, args []string) error {
+
+		configBase, themesDir, templatesDir, err := resolvePaths()
+		if err != nil {
+			return err
+		}
+
+		selected, err := theme.Choose(configBase, themesDir)
+		if err != nil {
+			return err
+		}
+
+		wallpaper.Restore(configBase, themesDir, selected)
+
+		return theme.ApplyThemeByName(
+			configBase,
+			themesDir,
+			templatesDir,
+			selected,
+		)
+	},
 }
 
 var applyCmd = &cobra.Command{
@@ -25,6 +52,8 @@ var applyCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		wallpaper.Restore(configBase, themesDir, args[0])
 
 		return theme.ApplyThemeByName(
 			configBase,
@@ -50,6 +79,8 @@ var nextCmd = &cobra.Command{
 			return err
 		}
 
+		wallpaper.Restore(configBase, themesDir, next)
+
 		return theme.ApplyThemeByName(
 			configBase,
 			themesDir,
@@ -74,6 +105,8 @@ var prevCmd = &cobra.Command{
 			return err
 		}
 
+		wallpaper.Restore(configBase, themesDir, prev)
+
 		return theme.ApplyThemeByName(
 			configBase,
 			themesDir,
@@ -97,6 +130,8 @@ var randomCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		wallpaper.Restore(configBase, themesDir, r)
 
 		return theme.ApplyThemeByName(
 			configBase,
@@ -158,4 +193,5 @@ func init() {
 	themeCmd.AddCommand(prevCmd)
 	themeCmd.AddCommand(randomCmd)
 	themeCmd.AddCommand(listCmd)
+	themeCmd.AddCommand(chooseCmd)
 }
