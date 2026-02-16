@@ -46,7 +46,19 @@ var wallpaperChooseCmd = &cobra.Command{
 	Short: "Choose a wallpaper using file picker",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if err := wallpaper.Choose(); err != nil {
+		configBase, themesDir, _, err := resolvePaths()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		currentTheme, err := theme.GetCachedTheme(configBase)
+		if err != nil {
+			fmt.Println("No active theme found")
+			os.Exit(1)
+		}
+
+		if err := wallpaper.Choose(configBase, themesDir, currentTheme); err != nil {
 			fmt.Println("Error choosing wallpaper:", err)
 			os.Exit(1)
 		}
@@ -58,8 +70,7 @@ var wallpaperNextCmd = &cobra.Command{
 	Short: "Switch to next wallpaper in current theme",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		configBase, themesDir, templatesDir, err := resolvePaths()
-		_ = templatesDir
+		configBase, themesDir, _, err := resolvePaths()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -86,8 +97,7 @@ var wallpaperPrevCmd = &cobra.Command{
 	Short: "Switch to previous wallpaper in current theme",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		configBase, themesDir, templatesDir, err := resolvePaths()
-		_ = templatesDir
+		configBase, themesDir, _, err := resolvePaths()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -114,8 +124,7 @@ var wallpaperRandomCmd = &cobra.Command{
 	Short: "Apply random wallpaper from current theme",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		configBase, themesDir, templatesDir, err := resolvePaths()
-		_ = templatesDir
+		configBase, themesDir, _, err := resolvePaths()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -142,8 +151,7 @@ var wallpaperRestoreCmd = &cobra.Command{
 	Short: "Restore last wallpaper for current theme",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		configBase, themesDir, templatesDir, err := resolvePaths()
-		_ = templatesDir
+		configBase, themesDir, _, err := resolvePaths()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

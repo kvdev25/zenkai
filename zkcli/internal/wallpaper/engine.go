@@ -3,13 +3,11 @@ package wallpaper
 import (
 	"errors"
 	"fmt"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
-
-	"github.com/godbus/dbus/v5"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,90 +53,44 @@ func Apply(path string) error {
 // org.freedesktop.portal.FileChooser
 //
 // After user selects a file, it calls Apply().
-func Choose() error {
 
-	conn, err := dbus.ConnectSessionBus()
-	if err != nil {
-		return err
+func Choose(configBase, themesDir, currentTheme string) error {
+
+	startDir := filepath.Join(themesDir, currentTheme, "backgrounds")
+
+	// Ensure directory exists
+	if _, err := os.Stat(startDir); err != nil {
+		return fmt.Errorf("backgrounds folder not found for theme: %s", currentTheme)
 	}
-	defer conn.Close()
 
-	home, _ := os.UserHomeDir()
-	startDir := filepath.Join(home, "pictures", "wallpapers")
-
-	obj := conn.Object(
-		"org.freedesktop.portal.Desktop",
-		"/org/freedesktop/portal/desktop",
+	// Launch zenity file picker
+	cmd := exec.Command(
+		"zenity",
+		"--file-selection",
+		"--title=Select Wallpaper",
+		"--filename="+startDir+"/",
 	)
 
-	// Portal options
-	options := map[string]dbus.Variant{
-		"current_folder": dbus.MakeVariant("file://" + startDir),
-	}
-
-	var requestPath dbus.ObjectPath
-
-	err = obj.Call(
-		"org.freedesktop.portal.FileChooser.OpenFile",
-		0,
-		"", // parent window
-		"Select Wallpaper",
-		options,
-	).Store(&requestPath)
-
+	out, err := cmd.Output()
 	if err != nil {
+		// User cancels → zenity exits with non-zero
+		return fmt.Errorf("selection cancelled")
+	}
+
+	filePath := strings.TrimSpace(string(out))
+	if filePath == "" {
+		return fmt.Errorf("no file selected")
+	}
+
+	fmt.Println("Selected:", filePath)
+
+	// Cache wallpaper for theme
+	if err := cacheWallpaper(configBase, currentTheme, filePath); err != nil {
 		return err
 	}
 
-	// Listen for portal response signal
-	rule := fmt.Sprintf(
-		"type='signal',interface='org.freedesktop.portal.Request',path='%s'",
-		requestPath,
-	)
-
-	if err := conn.BusObject().Call(
-		"org.freedesktop.DBus.AddMatch",
-		0,
-		rule,
-	).Err; err != nil {
-		return err
-	}
-
-	signals := make(chan *dbus.Signal, 1)
-	conn.Signal(signals)
-
-	for signal := range signals {
-
-		if signal.Path == requestPath &&
-			signal.Name == "org.freedesktop.portal.Request.Response" {
-
-			responseCode := signal.Body[0].(uint32)
-			results := signal.Body[1].(map[string]dbus.Variant)
-
-			if responseCode != 0 {
-				fmt.Println("Selection cancelled")
-				return nil
-			}
-
-			uris := results["uris"].Value().([]string)
-			if len(uris) == 0 {
-				return errors.New("no file selected")
-			}
-
-			parsed, err := url.Parse(uris[0])
-			if err != nil {
-				return err
-			}
-
-			filePath := parsed.Path
-			fmt.Println("Selected:", filePath)
-
-			// Reuse Apply()
-			return Apply(filePath)
-		}
-	}
-
-	return errors.New("portal response not received")
+	// Apply wallpaper
+	return Apply(filePath)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
