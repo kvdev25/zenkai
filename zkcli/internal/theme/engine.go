@@ -571,9 +571,10 @@ func ListThemes(themesDir string) ([]string, error) {
 }
 
 func Choose(configBase, themesDir string) (string, error) {
+	percentSign := "%"
 	cmdStr := fmt.Sprintf(
-		"zkcli theme list | fzf --preview-window=top --preview='fzf-preview %s/{1}/preview.png' | xargs -xo zkcli theme apply",
-		themesDir,
+		"zkcli theme list | fzf --preview-window=right,70%s --preview='fzf-preview %s/{1}/preview.png' | xargs -xo zkcli theme apply",
+		percentSign, themesDir,
 	)
 
 	cmd := exec.Command("xdg-terminal-exec", "bash", "-c", cmdStr)

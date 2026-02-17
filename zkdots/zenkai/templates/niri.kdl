@@ -1,0 +1,10 @@
+~/.config/niri/zenkai.kdl ::
+
+layout {
+  gaps {{ spacing }}
+  focus-ring {
+    width {{ thickness }}
+    active-color "{{ accent }}"
+    inactive-color "{{ bg }}"
+  }
+}

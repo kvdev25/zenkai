@@ -1,0 +1,9 @@
+
+layout {
+  gaps 8
+  focus-ring {
+    width 3
+    active-color "#eb6f92"
+    inactive-color "#1f1d2e"
+  }
+}

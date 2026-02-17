@@ -1,0 +1,12 @@
+[global]
+
+frame_width = 3
+progress_bar_corner_radius = 20
+progress_bar_frame_width = 0
+gap_size = 8
+font = "NotoSans Nerd Font Propo 10"
+corner_radius = 20
+frame_color = "#eb6f92"
+background = "#191724"
+foreground = "#e0def4"
+highlight = "#eb6f92"
