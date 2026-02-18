@@ -1,0 +1,57 @@
+{
+  "layer": "top",
+  "position": "left",
+  "spacing": 0,
+  "reload_style_on_change": false,
+  "modules-left": [ "niri/workspaces", "niri/submap" ],
+  "modules-center": [ "clock", "clock#2" ],
+  "modules-right": [ "network", "bluetooth", "pulseaudio", "battery" ],
+
+  "niri/workspaces": {
+    "format": "<sub>{icon}</sub>",
+    "format-icons": {
+      "default": "",
+    },
+    "persistent-workspaces": { "*": 10 }
+  },
+
+  "network": {
+    "format": "{ifname}",
+    "format-wifi": "󰤨",
+    "format-ethernet": "󰀂",
+    "format-disconnected": "󰤮",
+    "format-disabled": "󰤭",
+    "max-length": 50,
+    "on-click": "gtk-launch impala"
+  },
+
+  "bluetooth": {
+    "format": "󰂯",
+    "format-on": "󰂯",
+    "format-connected": "󰂯",
+    "format-off": "󰂲",
+    "format-disabled": "󰂲",
+    "on-click": "gtk-launch bluetui"
+  },
+
+  "pulseaudio": {
+    "format": "",
+    "format-muted": "",
+    "on-click": "gtk-launch wiremix"
+  },
+
+  "battery": {
+    "format": "{icon}",
+    "format-icons": ["󰁺","󰁻","󰁼","󰁽","󰁾","󰁿","󰂀","󰂁","󰂂","󰁹"],
+    "format-charging": "{icon}󱐋",
+    "on-click": "fzf-power-profiles-menu"
+  },
+
+  "clock": {
+    "format": "{:%H}"
+  },
+
+  "clock#2": {
+    "format": "{:%M}"
+  }
+}

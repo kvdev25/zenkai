@@ -10,6 +10,7 @@ binds {
   // Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh "zkcli wallpaper choose"; }
   Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh " zkcli wallpaper apply $(fd . ~/.config/zenkai/themes/$(cat ~/.config/zenkai/.theme_state)/backgrounds | vicinae dmenu)"; }
   Mod+Ctrl+Space hotkey-overlay-title="Select Theme" { spawn-sh "zkcli theme apply $(zkcli theme list | vicinae dmenu) "; }
+  Mod+Ctrl+W hotkey-overlay-title="Select Waybar Theme" { spawn-sh "change-waybar"; }
 
   Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn-sh "vicinae vicinae://extensions/vicinae/clipboard/history"; }
 

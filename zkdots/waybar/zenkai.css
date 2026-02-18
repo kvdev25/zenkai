@@ -1,12 +1,12 @@
-@define-color accent #7aa2f7;
-@define-color fg #c0caf5;
-@define-color bg #1a1b26;
-@define-color bg0 #111118;
-@define-color c0 #15161e;
-@define-color c1 #f7768e;
-@define-color c2 #9ece6a;
-@define-color fg_selection #c0caf5;
-@define-color bg_selection #283457;
+@define-color accent #cba6f7;
+@define-color fg #cdd6f4;
+@define-color bg #1e1e2e;
+@define-color bg0 #11111b;
+@define-color c0 #45475a;
+@define-color c1 #f38ba8;
+@define-color c2 #a6e3a1;
+@define-color fg_selection #cdd6f4;
+@define-color bg_selection #585b70;
 
 .modules-left,
 .modules-right,
@@ -17,11 +17,11 @@
 #pulseaudio:hover,
 #battery:hover,
 #network:hover {
-  border-radius: 0;
+  border-radius: 20;
 }
 
 .modules-center,
 .modules-left,
 .modules-right {
-  margin: 18 4;
+  margin: 8 4;
 }
