@@ -28,7 +28,19 @@ var wallpaperApplyCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if err := wallpaper.Apply(args[0]); err != nil {
+		configBase, _, _, err := resolvePaths()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		currentTheme, err := theme.GetCachedTheme(configBase)
+		if err != nil {
+			fmt.Println("No active theme found")
+			os.Exit(1)
+		}
+
+		if err := wallpaper.Apply(configBase, currentTheme, args[0]); err != nil {
 			fmt.Println("Error applying wallpaper:", err)
 			os.Exit(1)
 		}

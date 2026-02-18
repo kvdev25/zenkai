@@ -17,7 +17,11 @@ import (
 // Apply executes:
 //
 // swww img <path>
-func Apply(path string) error {
+func Apply(configBase, currentTheme, path string) error {
+
+	if err := cacheWallpaper(configBase, currentTheme, path); err != nil {
+		return err
+	}
 
 	expanded := expandHome(path)
 
@@ -84,13 +88,8 @@ func Choose(configBase, themesDir, currentTheme string) error {
 
 	fmt.Println("Selected:", filePath)
 
-	// Cache wallpaper for theme
-	if err := cacheWallpaper(configBase, currentTheme, filePath); err != nil {
-		return err
-	}
-
 	// Apply wallpaper
-	return Apply(filePath)
+	return Apply(configBase, currentTheme, filePath)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -186,11 +185,7 @@ func Next(configBase, themesDir, currentTheme string) (string, error) {
 
 	next := wallpapers[index]
 
-	if err := Apply(next); err != nil {
-		return "", err
-	}
-
-	if err := cacheWallpaper(configBase, currentTheme, next); err != nil {
+	if err := Apply(configBase, currentTheme, next); err != nil {
 		return "", err
 	}
 
@@ -216,11 +211,7 @@ func Prev(configBase, themesDir, currentTheme string) (string, error) {
 
 	prev := wallpapers[index]
 
-	if err := Apply(prev); err != nil {
-		return "", err
-	}
-
-	if err := cacheWallpaper(configBase, currentTheme, prev); err != nil {
+	if err := Apply(configBase, currentTheme, prev); err != nil {
 		return "", err
 	}
 
@@ -237,11 +228,7 @@ func Random(configBase, themesDir, currentTheme string) (string, error) {
 	randIndex := time.Now().UnixNano() % int64(len(wallpapers))
 	random := wallpapers[randIndex]
 
-	if err := Apply(random); err != nil {
-		return "", err
-	}
-
-	if err := cacheWallpaper(configBase, currentTheme, random); err != nil {
+	if err := Apply(configBase, currentTheme, random); err != nil {
 		return "", err
 	}
 
@@ -252,7 +239,7 @@ func Restore(configBase, themesDir, currentTheme string) (string, error) {
 
 	wallpaper, err := getCachedWallpaper(configBase, currentTheme)
 	if err == nil {
-		if err := Apply(wallpaper); err == nil {
+		if err := Apply(configBase, currentTheme, wallpaper); err == nil {
 			return wallpaper, nil
 		}
 	}

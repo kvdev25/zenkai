@@ -1,0 +1,57 @@
+RICE=(
+  "swww"
+  "waybar"
+  "starship"
+)
+
+ESSENTIALS=(
+  "zen-browser-bin"
+  "dunst"
+  "ghostty"
+  "iwd"
+  "keyd"
+  "vicinae-bin"
+
+  "base-devel"
+  "gnome-keyring"
+  "git"
+  "neovim"
+
+  "niri"
+
+  "tuned"
+  "tuned-ppd"
+
+  "noto-fonts-cjk"
+  "noto-fonts-emoji"
+  "ttf-jetbrains-mono-nerd"
+  "ttf-noto-nerd"
+
+  "satty"
+  "xdg-desktop-portal-gnome"
+  "libnotify"
+
+  "wl-clipboard"
+  "brightnessctl"
+)
+
+TERM_UTILS=(
+  "xdg-terminal-exec"
+  "yazi"
+  "zenity"
+  "zoxide"
+  "fastfetch"
+  "fd"
+  "fish"
+  "fzf"
+  "chafa"
+  "eza"
+  "ripgrep"
+  "wiremix"
+  "man-db"
+  "impala"
+  "lazygit"
+  "bottom"
+  "bluetui"
+  "bat"
+)
