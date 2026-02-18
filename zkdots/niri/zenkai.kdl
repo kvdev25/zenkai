@@ -1,9 +1,14 @@
 
 layout {
-  gaps 8
+  gaps 18
   focus-ring {
-    width 3
-    active-color "#eb6f92"
-    inactive-color "#1f1d2e"
+    width 1
+    active-color "#7aa2f7"
+    inactive-color "#1a1b26"
   }
+}
+
+window-rule {
+  geometry-corner-radius 0
+  clip-to-geometry true
 }

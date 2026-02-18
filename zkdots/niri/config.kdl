@@ -6,9 +6,7 @@ include "zenkai.kdl"
 spawn-at-startup "dunst"
 spawn-at-startup "waybar"
 spawn-at-startup "swww-daemon"
-spawn-at-startup "wl-paste --watch cliphist store"
-spawn-at-startup "systemctl --user start elephant.service"
-spawn-at-startup "walker --gapplication-service"
+spawn-at-startup "vicinae" "server"
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 prefer-no-csd
@@ -34,16 +32,6 @@ layout {
 
 hotkey-overlay {
   skip-at-startup
-}
-
-window-rule {
-  geometry-corner-radius 12
-  clip-to-geometry true
-}
-
-window-rule {
-  match app-id="term.floating"
-  open-floating true
 }
 
 input {

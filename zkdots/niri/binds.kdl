@@ -2,14 +2,16 @@ binds {
   Mod+Shift+Slash { show-hotkey-overlay; }
 
   Mod+Return  hotkey-overlay-title="Open Ghostty"     { spawn "ghostty"; }
-  Mod+Space   hotkey-overlay-title="Open Launcher"      { spawn "fzf-app-launcher"; }
+  Mod+Space   hotkey-overlay-title="Open Launcher"      { spawn-sh "vicinae toggle"; }
   Mod+Shift+B hotkey-overlay-title="Open Zen Browser" { spawn "zen-browser"; }
   Mod+Shift+F hotkey-overlay-title="Open Nautilus"    { spawn "nautilus"; }
   Mod+Shift+W hotkey-overlay-title="Toggle Waybar"    { spawn-sh "pkill waybar || waybar"; }
-  Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh "zkcli wallpaper choose"; }
-  Mod+Ctrl+Space hotkey-overlay-title="Select Theme" { spawn-sh "zkcli theme choose"; }
 
-  Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn-sh "fzf-clipboard"; }
+  // Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh "zkcli wallpaper choose"; }
+  Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh " zkcli wallpaper apply $(fd . ~/.config/zenkai/themes/$(cat ~/.config/zenkai/.theme_state)/backgrounds | vicinae dmenu)"; }
+  Mod+Ctrl+Space hotkey-overlay-title="Select Theme" { spawn-sh "zkcli theme apply $(zkcli theme list | vicinae dmenu) "; }
+
+  Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn-sh "vicinae vicinae://extensions/vicinae/clipboard/history"; }
 
   XF86AudioMicMute      allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
   XF86AudioPlay         allow-when-locked=true { spawn-sh "playerctl play-pause"; }
@@ -22,6 +24,11 @@ binds {
   XF86AudioMute         allow-when-locked=true { spawn-sh "zkcli volume mute"; }
   XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "zkcli brightness set 5+"; }
   XF86MonBrightnessDown allow-when-locked=true { spawn-sh "zkcli brightness set 5-"; }
+  Shift+XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "zkcli volume set 0.01+"; }
+  Shift+XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "zkcli volume set 0.01-"; }
+  Shift+XF86AudioMute         allow-when-locked=true { spawn-sh "zkcli volume mute"; }
+  Shift+XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "zkcli brightness set 1+"; }
+  Shift+XF86MonBrightnessDown allow-when-locked=true { spawn-sh "zkcli brightness set 1-"; }
 
   Mod+O repeat=false { toggle-overview; }
 

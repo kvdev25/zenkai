@@ -8,3 +8,8 @@ layout {
     inactive-color "{{ bg }}"
   }
 }
+
+window-rule {
+  geometry-corner-radius {{ rounding }}
+  clip-to-geometry true
+}
