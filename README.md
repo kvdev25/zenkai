@@ -3,5 +3,5 @@
 - waybar
 - brightnessctl
 - niri
-<!-- - vicinae -->
 - zenity
+<!-- - vicinae -->
