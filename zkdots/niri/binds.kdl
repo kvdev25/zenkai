@@ -39,6 +39,8 @@ binds {
   Mod+Up    { focus-window-up; }
   Mod+Right { focus-column-right; }
   Mod+H     { focus-column-left; }
+  Mod+J     { focus-window-down; }
+  Mod+K     { focus-window-up; }
   Mod+L     { focus-column-right; }
 
   Mod+Ctrl+Left  { move-column-left; }
@@ -46,12 +48,14 @@ binds {
   Mod+Ctrl+Up    { move-window-up; }
   Mod+Ctrl+Right { move-column-right; }
   Mod+Ctrl+H     { move-column-left; }
+  Mod+Ctrl+J     { move-window-down; }
+  Mod+Ctrl+K     { move-window-up; }
   Mod+Ctrl+L     { move-column-right; }
 
-  Mod+J     { focus-window-or-workspace-down; }
-  Mod+K     { focus-window-or-workspace-up; }
-  Mod+Ctrl+J     { move-window-down-or-to-workspace-down; }
-  Mod+Ctrl+K     { move-window-up-or-to-workspace-up; }
+  Mod+N     { focus-workspace-down; }
+  Mod+P     { focus-workspace-up; }
+  Mod+Ctrl+N     { move-window-to-workspace-down; }
+  Mod+Ctrl+P     { move-window-to-workspace-up; }
 
   Mod+1 { focus-column-first; }
   Mod+9  { focus-column-last; }
@@ -109,6 +113,11 @@ binds {
   Mod+Shift+TouchpadScrollUp        { focus-column-left; }
   Mod+Ctrl+Shift+TouchpadScrollDown { move-column-right; }
   Mod+Ctrl+Shift+TouchpadScrollUp   { move-column-left; }
+
+  Mod+TouchpadScrollDown      { set-window-height "-10%"; }
+  Mod+TouchpadScrollUp        { set-window-height "+10%"; }
+  Mod+TouchpadScrollRight     { set-column-width "-10%"; }
+  Mod+TouchpadScrollLeft      { set-column-width "+10%"; }
 
   Mod+Tab { focus-workspace-previous; }
 
