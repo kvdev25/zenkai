@@ -1,5 +1,4 @@
 ~/.config/niri/zenkai.kdl ::
-
 layout {
   gaps {{ spacing }}
   focus-ring {
