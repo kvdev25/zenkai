@@ -1,7 +1,7 @@
 binds {
   Mod+Shift+Slash { show-hotkey-overlay; }
 
-  Mod+Return  hotkey-overlay-title="Open Ghostty"     { spawn "ghostty"; }
+  Mod+Return  hotkey-overlay-title="Open Kitty"     { spawn "kitty"; }
   Mod+Space   hotkey-overlay-title="Open Launcher"      { spawn-sh "vicinae toggle"; }
   Mod+Shift+B hotkey-overlay-title="Open Zen Browser" { spawn "zen-browser"; }
   Mod+Shift+F hotkey-overlay-title="Open Nautilus"    { spawn "nautilus"; }
@@ -114,10 +114,10 @@ binds {
   Mod+Ctrl+Shift+TouchpadScrollDown { move-column-right; }
   Mod+Ctrl+Shift+TouchpadScrollUp   { move-column-left; }
 
-  Mod+TouchpadScrollDown      { set-window-height "-10%"; }
-  Mod+TouchpadScrollUp        { set-window-height "+10%"; }
-  Mod+TouchpadScrollRight     { set-column-width "-10%"; }
-  Mod+TouchpadScrollLeft      { set-column-width "+10%"; }
+  Mod+TouchpadScrollDown      { set-window-height "-2%"; }
+  Mod+TouchpadScrollUp        { set-window-height "+2%"; }
+  Mod+TouchpadScrollRight     { set-column-width "-2%"; }
+  Mod+TouchpadScrollLeft      { set-column-width "+2%"; }
 
   Mod+Tab { focus-workspace-previous; }
 

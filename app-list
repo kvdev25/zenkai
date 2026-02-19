@@ -1,57 +1,64 @@
-RICE=(
-  "swww"
-  "waybar"
-  "starship"
-)
-
-ESSENTIALS=(
-  "zen-browser-bin"
-  "dunst"
-  "ghostty"
-  "iwd"
-  "keyd"
-  "vicinae-bin"
-
-  "base-devel"
-  "gnome-keyring"
-  "git"
-  "neovim"
-
-  "niri"
-
-  "tuned"
-  "tuned-ppd"
-
-  "noto-fonts-cjk"
-  "noto-fonts-emoji"
-  "ttf-jetbrains-mono-nerd"
-  "ttf-noto-nerd"
-
-  "satty"
-  "xdg-desktop-portal-gnome"
-  "libnotify"
-
-  "wl-clipboard"
-  "brightnessctl"
-)
-
-TERM_UTILS=(
-  "xdg-terminal-exec"
-  "yazi"
-  "zenity"
-  "zoxide"
-  "fastfetch"
-  "fd"
-  "fish"
-  "fzf"
-  "chafa"
-  "eza"
-  "ripgrep"
-  "wiremix"
-  "man-db"
-  "impala"
-  "lazygit"
-  "bottom"
-  "bluetui"
-  "bat"
-)
+amd-ucode
+base
+base-devel
+bat
+bluetui
+bluez
+bluez-utils
+bottom
+brightnessctl
+dunst
+efibootmgr
+eza
+fastfetch
+fd
+fish
+fzf
+ghostty
+git
+gnome-keyring
+gst-plugin-pipewire
+impala
+iwd
+keyd
+kitty
+lazygit
+libnotify
+libpulse
+linux
+linux-firmware
+man-db
+neovim
+niri
+noto-fonts-cjk
+noto-fonts-emoji
+nvidia-open
+pipewire
+pipewire-alsa
+pipewire-jack
+pipewire-pulse
+ripgrep
+satty
+sof-firmware
+starship
+sudo
+swww
+ttf-jetbrains-mono-nerd
+ttf-noto-nerd
+tuned
+tuned-ppd
+vicinae-bin
+waybar
+wiremix
+wireplumber
+wl-clipboard
+xdg-desktop-portal-gnome
+xdg-terminal-exec
+yay
+yay-debug
+yazi
+zen-browser-bin
+zenity
+zig
+zoxide
+zram-generator
