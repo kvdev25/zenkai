@@ -540,16 +540,19 @@ const stateFileName = ".theme_state"
 
 func CacheCurrentTheme(configBase, themeName string) error {
 	statePath := filepath.Join(configBase, stateFileName)
+
+	newPath := filepath.Join(configBase, "themes", ".current")
+	oldPath := filepath.Join(configBase, "themes", themeName)
+
+	os.Symlink(oldPath, newPath)
+
 	return os.WriteFile(statePath, []byte(themeName), 0644)
 }
 
 func GetCachedTheme(configBase string) (string, error) {
-	statePath := filepath.Join(configBase, stateFileName)
-	data, err := os.ReadFile(statePath)
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(string(data)), nil
+	theme, err := os.Readlink(filepath.Join(configBase, "themes", ".current"))
+	_ = err
+	return theme, nil
 }
 
 func ListThemes(themesDir string) ([]string, error) {

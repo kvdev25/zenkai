@@ -117,24 +117,14 @@ func getWallpaperStateDir(configBase string) string {
 }
 
 func cacheWallpaper(configBase, themeName, wallpaperPath string) error {
-	dir := getWallpaperStateDir(configBase)
-
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		return err
-	}
-
-	stateFile := filepath.Join(dir, themeName)
-	return os.WriteFile(stateFile, []byte(wallpaperPath), 0644)
+	newPath := filepath.Join(configBase, "themes", ".current", "backgrounds", ".current")
+	os.Symlink(wallpaperPath, newPath)
+	return nil
 }
 
 func getCachedWallpaper(configBase, themeName string) (string, error) {
-	stateFile := filepath.Join(getWallpaperStateDir(configBase), themeName)
-
-	data, err := os.ReadFile(stateFile)
-	if err != nil {
-		return "", err
-	}
-
+	data, err := os.Readlink(filepath.Join(configBase, "themes", ".current", "backgrounds", ".current"))
+	_ = err
 	return string(data), nil
 }
 
