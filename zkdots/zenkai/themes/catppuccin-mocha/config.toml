@@ -27,7 +27,7 @@ c15 = "#bac2de"
 
 thickness = 1
 rounding = 20
-spacing = 8
+spacing = 30
 
 [opacity]
 active = 1

@@ -1,5 +1,5 @@
 layout {
-  gaps 8
+  gaps 30
   focus-ring {
     width 1
     active-color "#cba6f7"

@@ -541,7 +541,7 @@ const stateFileName = ".theme_state"
 func CacheCurrentTheme(configBase, themeName string) error {
 	statePath := filepath.Join(configBase, stateFileName)
 
-	newPath := filepath.Join(configBase, "themes", ".current")
+	newPath := filepath.Join(configBase, ".current")
 	oldPath := filepath.Join(configBase, "themes", themeName)
 
 	os.Symlink(oldPath, newPath)
@@ -551,6 +551,7 @@ func CacheCurrentTheme(configBase, themeName string) error {
 
 func GetCachedTheme(configBase string) (string, error) {
 	theme, err := os.Readlink(filepath.Join(configBase, "themes", ".current"))
+	theme = filepath.Base(theme)
 	_ = err
 	return theme, nil
 }
