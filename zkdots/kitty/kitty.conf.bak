@@ -5,9 +5,3 @@ font_size 10.0
 cursor_trail 1
 cursor_trail_decay 0.1 0.2
 window_padding_width 8
-
-
-# BEGIN_KITTY_THEME
-# Noctalia
-include current-theme.conf
-# END_KITTY_THEME

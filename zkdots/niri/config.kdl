@@ -1,51 +1,55 @@
 // "/-" comments out the following node.
 
 include "binds.kdl"
-include "zenkai.kdl"
 
-spawn-at-startup "dunst"
-spawn-at-startup "waybar"
-spawn-at-startup "swww-daemon"
-spawn-at-startup "vicinae" "server"
+spawn-at-startup "qs" "-c" "noctalia-shell"
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 prefer-no-csd
 
 output "eDP-1" {
-  mode "2560x1600"
-  scale 1.25
+	mode "2560x1600"
+	scale 1.25
 }
 
 layout {
-  center-focused-column "always"
-  preset-column-widths {
-    proportion 0.33333
-    proportion 0.5
-    proportion 0.66667
-  }
-  default-column-width { proportion 0.7; }
+	gaps 20
+	center-focused-column "always"
+	preset-column-widths {
+		proportion 0.33333
+		proportion 0.5
+		proportion 0.66667
+	}
+	default-column-width { proportion 0.66667; }
 
-  focus-ring {
-    on
-  }
+	focus-ring {
+		width 1
+	}
 }
 
 hotkey-overlay {
-  skip-at-startup
+	skip-at-startup
 }
 
 input {
-  keyboard {
-    repeat-delay 200
-    numlock
-  }
+	keyboard {
+		repeat-delay 200
+		numlock
+	}
 
-  touchpad {
-    tap
-    natural-scroll
-  }
+	touchpad {
+		tap
+		natural-scroll
+	}
 }
 
 animations {
-  slowdown 0.5
+	slowdown 0.5
 }
+
+window-rule {
+	geometry-corner-radius 20
+	clip-to-geometry true
+}
+
+include "./noctalia.kdl"

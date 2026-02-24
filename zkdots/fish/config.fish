@@ -9,6 +9,7 @@ if status is-interactive
     alias cat bat
     alias ls "eza -l --icons=auto"
     alias pacman "pacman --color=auto"
+    alias noctalia-shell "qs -c noctalia-shell"
 
     zoxide init fish | source
     starship init fish | source

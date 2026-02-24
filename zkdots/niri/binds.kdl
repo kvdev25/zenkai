@@ -1,34 +1,21 @@
 binds {
   Mod+Shift+Slash { show-hotkey-overlay; }
 
-  Mod+Return  hotkey-overlay-title="Open Kitty"     { spawn "kitty"; }
-  Mod+Space   hotkey-overlay-title="Open Launcher"      { spawn-sh "vicinae toggle"; }
-  Mod+Shift+B hotkey-overlay-title="Open Zen Browser" { spawn "zen-browser"; }
-  Mod+Shift+F hotkey-overlay-title="Open Nautilus"    { spawn "nautilus"; }
-  Mod+Shift+W hotkey-overlay-title="Toggle Waybar"    { spawn-sh "zkcli waybar toggle"; }
+  Mod+Return  hotkey-overlay-title="Open Kitty"         { spawn "kitty"; }
+  Mod+Space   hotkey-overlay-title="Open Launcher"      { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
+  Mod+Shift+B hotkey-overlay-title="Open Zen Browser"   { spawn "zen-browser"; }
+  Mod+Shift+F hotkey-overlay-title="Open Nautilus"      { spawn "nautilus"; }
+  Mod+Shift+W hotkey-overlay-title="Toggle Waybar"      { spawn-sh "qs -c noctalia-shell ipc call bar toggle"; }
 
-  Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh " zkcli wallpaper apply \"$(fd . ~/.config/zenkai/themes/$(cat ~/.config/zenkai/.theme_state)/backgrounds | vicinae dmenu)\""; }
-  Mod+Ctrl+Space hotkey-overlay-title="Select Theme" { spawn-sh "zkcli theme apply \"$(zkcli theme list | vicinae dmenu)\""; }
-  Mod+Ctrl+W hotkey-overlay-title="Select Waybar Theme" { spawn-sh "zkcli waybar apply \"$(zkcli waybar list | vicinae dmenu)\""; }
+  Mod+Shift+Ctrl+Space hotkey-overlay-title="Select Wallpaper" { spawn-sh "qs -c noctalia-shell ipc call wallpaper toggle"; }
+  Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
 
-  Mod+Ctrl+V hotkey-overlay-title="Clipboard" { spawn-sh "vicinae vicinae://extensions/vicinae/clipboard/history"; }
-
-  XF86AudioMicMute      allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
-  XF86AudioPlay         allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-  XF86AudioStop         allow-when-locked=true { spawn-sh "playerctl stop"; }
-  XF86AudioPrev         allow-when-locked=true { spawn-sh "playerctl previous"; }
-  XF86AudioNext         allow-when-locked=true { spawn-sh "playerctl next"; }
-
-  XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "zkcli volume set 0.05+"; }
-  XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "zkcli volume set 0.05-"; }
-  XF86AudioMute         allow-when-locked=true { spawn-sh "zkcli volume mute"; }
-  XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "zkcli brightness set 5+"; }
-  XF86MonBrightnessDown allow-when-locked=true { spawn-sh "zkcli brightness set 5-"; }
-  Shift+XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "zkcli volume set 0.01+"; }
-  Shift+XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "zkcli volume set 0.01-"; }
-  Shift+XF86AudioMute         allow-when-locked=true { spawn-sh "zkcli volume mute"; }
-  Shift+XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "zkcli brightness set 1+"; }
-  Shift+XF86MonBrightnessDown allow-when-locked=true { spawn-sh "zkcli brightness set 1-"; }
+  XF86AudioMicMute      allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume muteInput"; }
+  XF86AudioRaiseVolume  allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume increase"; }
+  XF86AudioLowerVolume  allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume decrease"; }
+  XF86AudioMute         allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume muteOutput"; }
+  XF86MonBrightnessUp   allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call brightness increase"; }
+  XF86MonBrightnessDown allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call brightness decrease"; }
 
   Mod+O repeat=false { toggle-overview; }
 
